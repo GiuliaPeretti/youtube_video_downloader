@@ -71,27 +71,33 @@ class Downloader:
         else:
             if mp3_link!='':
                 mp3_link=mp3_link.split("\n")
+                mp3_link.remove('')
                 print(mp3_link)
                 dir_path=self.mp3_path.get()
-                if dir_path=='':
-                    self.mp3_path.delete('1.0', 'end')
-                    self.mp3_path.insert('1.0', 'Please insert a direcory path')
+                if dir_path=='' and len(mp3_link)>0 and mp3_link[0]!='':
+                    self.mp3_path.delete(0, 'end')
+                    self.mp3_path.insert(0, 'Please insert a direcory path')
                 self.mp3_text.delete('1.0', 'end')
                 for i in range(1,len(mp3_link)+1):
                     print(mp3_link[i-1])
-                    if (mp3_link[i-1]!=''):
-                        try:
-                            video = YouTube(mp3_link[i-1])
-                            stream = video.streams.filter(only_audio=True).first()
-                            stream.download(filename=f"{video.title}.mp3", output_path=dir_path)
-                        except:
-                            self.mp3_text.insert('1.0', "Unable to fetch video "+str(i)+" information. Please check the video URL or your network connection. \n")
-                self.mp3_text.insert('end', "Done")
+                    try:
+                        video = YouTube(mp3_link[i-1])
+                        stream = video.streams.filter(only_audio=True).first()
+                        stream.download(filename=f"{video.title}.mp3", output_path=dir_path)
+                    except:
+                        self.mp3_text.insert('1.0', "Unable to fetch video "+str(i)+" information. Please check the video URL or your network connection. \n")
+                if len(mp3_link)>0 and mp3_link[0]!='':
+                    self.mp3_text.insert('end', "Done")
 
             if mp4_link!='':
+                print('mp4_link: '+str(mp4_link))
                 mp4_link=mp4_link.split("\n")
+                mp4_link.remove('')
                 print(mp4_link)
                 dir_path=self.mp4_path.get()
+                if dir_path=='' and len(mp4_link)>0 and mp4_link[0]!='':
+                    self.mp4_path.delete(0, 'end')
+                    self.mp4_path.insert(0, 'Please insert a direcory path')
                 self.mp4_text.delete('1.0', 'end')
                 for i in range(1,len(mp4_link)+1):
                     if (mp4_link[i-1]!=''):
@@ -101,7 +107,8 @@ class Downloader:
                             stream.download(filename=f"{video.title}.mp4", output_path=dir_path)
                         except:
                             self.mp4_text.insert('1.0', "Unable to fetch video "+str(i)+" information. Please check the video URL or your network connection. \n")
-                self.mp4_text.insert('end', "Done")
+                if (len(mp4_link)>0 and mp4_link[0]!=''):
+                    self.mp4_text.insert('end', "Done")
 
 
 
